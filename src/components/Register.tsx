@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { useLocalForage } from '../hooks/useLocalForage';
+import { useAuth } from '../context/AuthContext';
 import { User } from '../types/User';
 
 const Register: React.FC = () => {
@@ -10,15 +10,14 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<'user' | 'admin'>('user');
   const navigate = useNavigate();
-  const [users, setUsers] = useLocalForage<User[]>('users', []);
+  const { state, dispatch } = useAuth();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     const newUser: User = { uid: uuidv4(), name, email, password, role };
-    const updatedUsers = [...users, newUser];
-    await setUsers(updatedUsers);
+    dispatch({ type: 'REGISTER', payload: newUser });
     console.log('Registered user:', newUser);
-    console.log('All users:', updatedUsers);
+    console.log('All users:', state.users);
     navigate('/login');
   };
 
@@ -27,19 +26,19 @@ const Register: React.FC = () => {
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
         <div>
-          <label>Name:</label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+          <label>Name*:</label>
+          <input type="text" required value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <label>Email*:</label>
+          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}  />
         </div>
         <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <label>Password*:</label>
+          <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <div>
-          <label>Role:</label>
+          <label>Role*:</label>
           <select value={role} onChange={(e) => setRole(e.target.value as 'user' | 'admin')}>
             <option value="user">User</option>
             <option value="admin">Admin</option>

@@ -1,6 +1,6 @@
 body, html {
   height: 100%;
-  margin: 0;
+  /* margin: 20; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,16 +28,17 @@ form {
 
 form div {
   margin-bottom: 15px;
+  margin-right: 15px;
   position: relative;
 }
 
 form label {
   position: absolute;
-  top: -20px;
+  top: -15px;
   left: 0;
   font-size: 12px;
-  color: #666;
-  transition: all 0.2s;
+  color: #f13a3a;
+  /* transition: all 0.2s; */
 }
 
 form input, form select {

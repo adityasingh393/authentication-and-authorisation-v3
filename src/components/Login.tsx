@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLocalForage } from '../hooks/useLocalForage';
-import { User } from '../types/User';
+import { useAuth } from '../context/AuthContext';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const [users] = useLocalForage<User[]>('users', []);
+  const { state, dispatch } = useAuth();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const user = users.find(u => u.email === email && u.password === password);
+    const user = state.users.find(u => u.email === email && u.password === password);
     console.log('Attempting login with email:', email, 'and password:', password);
-    console.log('All users:', users);
+    console.log('All users:', state.users);
     if (user) {
+      dispatch({ type: 'LOGIN', payload: user });
       console.log('Logged in user:', user);
       if (user.role === 'admin') {
         navigate('/admin');
@@ -31,12 +31,12 @@ const Login: React.FC = () => {
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <label>Email*:</label>
+          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <label>Password*:</label>
+          <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <button type="submit">Login</button>
       </form>

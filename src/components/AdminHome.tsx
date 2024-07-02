@@ -1,15 +1,15 @@
 import React from 'react';
-import { useLocalForage } from '../hooks/useLocalForage';
+import { useAuth } from '../context/AuthContext';
 import { User } from '../types/User';
 
 const AdminHome: React.FC = () => {
-  const [users] = useLocalForage<User[]>('users', []);
+  const { state } = useAuth();
 
   return (
-    <div className='conatiner'>
+    <div className='container'>
       <h2>All Users</h2>
       <ul>
-        {users.map(user => (
+        {state.users.map(user => (
           <li key={user.uid}>
             {user.name} ({user.email})
           </li>
